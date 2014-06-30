@@ -1,3 +1,4 @@
+import random
 from potato_class import *
 from wheat_class import *
 from sheep_class import *
@@ -78,6 +79,47 @@ class Field:
                         feed += 1
                 animal.grow(feed,water)
 
+def auto_grow(field,days):
+    for day in range(days):
+        light = random.randint(1,10)
+        water = random.randint(1,10)
+        food = random.randint(1,100)
+        field.grow(light,food,water)
+
+def manual_grow(field):
+    valid = False
+    while not valid:
+        try:
+            light = int(input("Please enter a light value (1-10): "))
+            if 1 <= light <= 10:
+                valid = True
+            else:
+                raise ValueError
+        except ValueError:
+            print("Not valid")
+    valid = False
+    while not valid:
+        try:
+            water = int(input("Please enter a water value (1-10): "))
+            if 1 <= water <= 10:
+                valid = True
+            else:
+                raise ValueError
+        except ValueError:
+            print("Not valid")
+    valid = False
+    while not valid:
+        food = int(input("Please enter a food value (1-100): "))
+        try:
+            if 1<= food <= 100:
+                valid = True
+            else:
+                raise ValueError
+        except ValueError:
+            print("Not valid")
+    
+
+    
 def display_crops(crop_list):
     print()
     print("Crops in the field: ")
@@ -129,15 +171,77 @@ def remove_animals_from_field(field):
     selected_animal = select_animal(len(field._animals))
     return field.remove_animal(selected_animal)
 
+def display_crop_menu():
+    print()
+    print("Which crop type would you like to add? ")
+    print("1.Potato")
+    print("2. Wheat")
+    print("0. Return to main menu")
+    print()
+
+def display_animal_menu():
+    print()
+    print("Which animal type would you like to add? ")
+    print("1. Cow")
+    print("2. Sheep")
+    print("0. Return to main menu")
+
+def display_main_menu():
+    print()
+    print("1. Plant a new crop")
+    print("2. Harvest a crop")
+    print("3. Add an animal")
+    print("4. Remove an animal")
+    print("5. Grow field manually over 1 day")
+    print("6. Grow field automatically over 30 days")
+    print("7. Report field status")
+    print("8. Exit test program")
+    print("Select from above")
+
+def get_menu_choice(lower,upper):
+    valid = False
+    while not valid:
+        try:
+            choice = int(input("Option selected: "))
+            if lower <= choice <= upper:
+                valid = True
+            else:
+                raise ValueError
+        except:
+            print("Please enter a valid option")
+    return choice
+
+def plant_crop_in_field(field):
+    display_crop_menu()
+    choice = get_menu_choice(0,2)
+    if choice == 1:
+        if field.plant_crop(Potato()):
+            print()
+            print("Crop planted")
+            print()
+        else:
+            print()
+            print("Field is full - potato not planted")
+            print()
+    elif choice == 2:
+        if field.plant_crop(Wheat()):
+            print()
+            print("Crop planted")
+        else:
+            print()
+            print("Field is full - wheat not planted")
+            print()
+        
+            
+
 def main():
     new_field = Field(5,2)
     new_field.plant_crop(Wheat())
     new_field.plant_crop(Potato())
     new_field.add_animal(Sheep)
     new_field.add_animal(Cow)
-    report = new_field.report_contents()
-    print(report)
-    report = new_field.report_needs()
+    manual_grow(new_field)
+    report = new_field.return_contents()
     print(report)
 
 
